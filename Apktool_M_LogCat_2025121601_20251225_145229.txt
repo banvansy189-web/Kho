@@ -1,0 +1,117 @@
+-- Roblox Lua Troll Script (Fixed + Better UI)
+
+local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hum = char:WaitForChild("Humanoid")
+
+-- Remove old GUI
+if player.PlayerGui:FindFirstChild("TrollMenu") then
+	player.PlayerGui.TrollMenu:Destroy()
+end
+
+-- GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "TrollMenu"
+gui.ResetOnSpawn = false
+gui.Parent = player.PlayerGui
+
+local frame = Instance.new("Frame")
+frame.Parent = gui
+frame.Size = UDim2.new(0, 230, 0, 310)
+frame.Position = UDim2.new(0, 20, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+
+local corner = Instance.new("UICorner", frame)
+corner.CornerRadius = UDim.new(0,10)
+
+local title = Instance.new("TextLabel")
+title.Parent = frame
+title.Size = UDim2.new(1,0,0,35)
+title.Text = "🔥 Troll Menu"
+title.TextColor3 = Color3.new(1,1,1)
+title.BackgroundColor3 = Color3.fromRGB(35,35,35)
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 22
+
+local layout = Instance.new("UIListLayout", frame)
+layout.Padding = UDim.new(0,5)
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+title.LayoutOrder = 0
+
+local rainbow = false
+
+function makeButton(txt, func)
+	local b = Instance.new("TextButton")
+	b.Parent = frame
+	b.Size = UDim2.new(0,210,0,35)
+	b.Text = txt
+	b.BackgroundColor3 = Color3.fromRGB(55,55,55)
+	b.TextColor3 = Color3.new(1,1,1)
+	b.Font = Enum.Font.SourceSansBold
+	b.TextSize = 20
+	
+	local c = Instance.new("UICorner", b)
+	c.CornerRadius = UDim.new(0,8)
+
+	b.MouseButton1Click:Connect(func)
+end
+
+-- Rainbow Aura
+makeButton("🌈 Rainbow Aura", function()
+	rainbow = not rainbow
+	
+	while rainbow do
+		task.wait(0.1)
+		for _,v in pairs(char:GetChildren()) do
+			if v:IsA("BasePart") then
+				v.Color = Color3.fromHSV((tick()%5)/5,1,1)
+			end
+		end
+	end
+end)
+
+-- Speed
+makeButton("⚡ Speed x2", function()
+	hum.WalkSpeed = 32
+end)
+
+-- Jump
+makeButton("🦘 Super Jump", function()
+	hum.JumpPower = 120
+end)
+
+-- Fake Teleport
+makeButton("📍 Fake Teleport", function()
+	local root = char:FindFirstChild("HumanoidRootPart")
+	if root then
+		char:MoveTo(root.Position + Vector3.new(math.random(-20,20),0,math.random(-20,20)))
+	end
+end)
+
+-- Fall Down
+makeButton("🤣 Fall Down", function()
+	hum.Sit = true
+end)
+
+-- Spin
+makeButton("🌀 Spin", function()
+	local root = char:FindFirstChild("HumanoidRootPart")
+	if root then
+		for i = 1,50 do
+			root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(30), 0)
+			task.wait()
+		end
+	end
+end)
+
+-- Reset
+makeButton("🔄 Reset Stats", function()
+	hum.WalkSpeed = 16
+	hum.JumpPower = 50
+	rainbow = false
+end)
