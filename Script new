@@ -1,0 +1,61 @@
+local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hum = char:WaitForChild("Humanoid")
+
+-- GUI
+local gui = Instance.new("ScreenGui", player.PlayerGui)
+gui.Name = "TrollMenu"
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0,220,0,260)
+frame.Position = UDim2.new(0,20,0.3,0)
+frame.BackgroundColor3 = Color3.fromRGB(25,25,25)
+
+local layout = Instance.new("UIListLayout", frame)
+layout.Padding = UDim.new(0,5)
+
+function makeButton(txt, func)
+	local b = Instance.new("TextButton", frame)
+	b.Size = UDim2.new(1,0,0,40)
+	b.Text = txt
+	b.BackgroundColor3 = Color3.fromRGB(60,60,60)
+	b.TextColor3 = Color3.new(1,1,1)
+	b.MouseButton1Click:Connect(func)
+end
+
+-- Rainbow Aura
+makeButton("Rainbow Aura", function()
+	while wait(0.1) do
+		for _,v in pairs(char:GetChildren()) do
+			if v:IsA("BasePart") then
+				v.Color = Color3.fromHSV(tick()%5/5,1,1)
+			end
+		end
+	end
+end)
+
+-- Speed
+makeButton("Speed x2", function()
+	hum.WalkSpeed = 32
+end)
+
+-- Super Jump
+makeButton("Jump Power", function()
+	hum.JumpPower = 120
+end)
+
+-- Fake Teleport
+makeButton("Fake Teleport", function()
+	char:MoveTo(char.PrimaryPart.Position + Vector3.new(math.random(-20,20),0,math.random(-20,20)))
+end)
+
+-- Ragdoll kiểu ngã
+makeButton("Fall Down", function()
+	hum.Sit = true
+end)
+
+-- Reset
+makeButton("Reset Stats", function()
+	hum.WalkSpeed = 16
+	hum.JumpPower = 50
+end)
